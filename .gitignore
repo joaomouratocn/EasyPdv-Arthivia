@@ -1,0 +1,36 @@
+===== BACKEND =====
+# Arquivos do intellij
+api/HELP.md
+api/target/
+api/.mvn/wrapper/maven-wrapper.jar
+api/.idea
+api/*.iws
+api/*.iml
+api/*.ipr
+api/*.yml
+api/application-dev.properties
+
+===== FRONTEND =====
+# Arquivos e pastas do Visual Studio
+app/.vs/
+app/*.user
+app/*.suo
+app/*.userosscache
+app/*.sln.docstates
+
+# Diretórios de build
+app/bin/
+app/obj/
+
+# Pacotes e dependências
+app/*.nupkg
+app/packages/
+app/*.dll
+
+# Logs, temporários
+app/*.log
+app/*.tmp
+
+# Configurações locais
+*.dbmdl
+*.db
