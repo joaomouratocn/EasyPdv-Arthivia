@@ -6,12 +6,27 @@ CREATE INDEX idx_spun_status ON spun_payment(status);
 CREATE INDEX idx_spun_late ON spun_payment(late_date);
 
 CREATE VIEW dashboard AS
-SELECT 
-    CURRENT_DATE as data,
-    COALESCE(SUM(v.tot_pay), 0) as sales_day,
-    COUNT(p.product_id) FILTER (WHERE p.amount <= p.min_amount) as critical_stock,
-    COALESCE(SUM(s.current_value), 0) as spun_open
-FROM sale v
-FULL OUTER JOIN product p ON true
-FULL OUTER JOIN spun_payment s ON s.status = 'OPEN'
-WHERE v.date_and_time::date = CURRENT_DATE;
+SELECT
+    CURRENT_DATE AS data,
+
+    --sale of day
+    COALESCE((
+        SELECT SUM(v.tot_pay)
+        FROM sale v
+        WHERE CAST(v.date_and_time as DATE) = CURRENT_DATE
+    ), 0) AS sales_day,
+
+    --critical stock
+    (
+        SELECT COUNT(*)
+        FROM product p
+        WHERE p.amount <= p.min_amount
+    ) AS critical_stock,
+
+    --open payment
+    COALESCE((
+        SELECT SUM(s.current_value)
+        FROM spun_payment s
+        WHERE s.status = 'OPEN'
+    ), 0) AS spun_open;
+
