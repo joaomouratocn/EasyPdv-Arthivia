@@ -1,9 +1,13 @@
+CREATE TABLE category(
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE
+);
 
 CREATE TABLE product (
     product_id SERIAL PRIMARY KEY,
     bar_code VARCHAR(50) UNIQUE,
     product_name VARCHAR(200) NOT NULL,
-    category VARCHAR(100),
+    category_id Integer REFERENCES category(category_id),
     unit_measure VARCHAR(20) DEFAULT 'UN',
     cost_price DECIMAL(10,2) NOT NULL,
     sale_price DECIMAL(10,2) NOT NULL,

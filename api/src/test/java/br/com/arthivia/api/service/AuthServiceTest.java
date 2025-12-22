@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -65,7 +64,7 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("Should return true when pass hash equals")
-    void authCase2(){
+    void authCase2() {
         Authentication authentication = mock(Authentication.class);
         var userEntity = new UserEntity("TEST", "TEST", DEFAULT_PASS, UserRole.ADMIN, true);
         var authRequestDto = new AuthRequestDto("TEST", DEFAULT_PASS);
@@ -84,7 +83,7 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("verify success login")
-    void authCase3(){
+    void authCase3() {
         Authentication authentication = mock(Authentication.class);
         var userEntity = new UserEntity("TEST", "TEST", DEFAULT_PASS, UserRole.ADMIN, true);
         var authRequestDto = new AuthRequestDto("TEST", DEFAULT_PASS);
