@@ -8,17 +8,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Transactional // Garante rollback automático após cada teste
 class ProductRepositoryTest {
+
     @Autowired
     ProductRepository productRepository;
+
     @Autowired
     EntityManager entityManager;
 
@@ -32,30 +37,39 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Should return product when enable and found by bar code")
     void findByBarCodeCase2() {
-        var BARCODE = "123456";
-        CategoryEntity testCategory = new CategoryEntity("TEST CATEGORY");
-        ProductEntity productEntity = new ProductEntity(BARCODE,
-                "NAME",
-                testCategory,
-                new BigDecimal("2.00"),
-                new BigDecimal("10.00"),
-                new BigDecimal("100"),
-                new BigDecimal("10"));
-        entityManager.persist(testCategory);
-        entityManager.persist(productEntity);
-        entityManager.flush();
+        Integer productId = createProduct("1234567");
 
-        Optional<ProductEntity> result = productRepository.findByBarCodeAndProductEnableTrue(BARCODE);
+        Optional<ProductEntity> result = productRepository.findByBarCodeAndProductEnableTrue("1234567");
         assertTrue(result.isPresent());
+        assertEquals(productId, result.get().getProductId()); // Verificação extra
     }
 
     @Test
     @DisplayName("Should set product enabled to false by product id")
     void saveEnableFalseByProductIdCase1() {
+        Integer id = createProduct("1234567");
+        productRepository.disableProduct(id);
+
+        ProductEntity productEntity = entityManager.find(ProductEntity.class, id);
+        assertFalse(productEntity.getProductEnable());
+        assertNotNull(productEntity); // Garante que o produto existe
     }
 
-    @Test
-    @DisplayName("Should do nothing when product id not found")
-    void saveEnableFalseByProductIdCase2() {
+    private Integer createProduct(String barcode) {
+        CategoryEntity testCategory = new CategoryEntity("TEST CATEGORY");
+        ProductEntity productEntity = new ProductEntity(barcode,
+                "NAME",
+                testCategory,
+                new BigDecimal("2.00"),
+                new BigDecimal("10.00"),
+                new BigDecimal("100"),
+                new BigDecimal("10"),
+                true,
+                LocalDateTime.now()
+        );
+        entityManager.persist(testCategory);
+        entityManager.persist(productEntity);
+        entityManager.flush();
+        return productEntity.getProductId();
     }
 }

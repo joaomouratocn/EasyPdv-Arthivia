@@ -44,7 +44,10 @@ public class ProductEntity {
                          BigDecimal costPrice,
                          BigDecimal salePrice,
                          BigDecimal amount,
-                         BigDecimal minAmount) {
+                         BigDecimal minAmount,
+                         Boolean productEnable,
+                         LocalDateTime createdAt
+    ) {
         this.barCode = barCode;
         this.productName = name;
         this.category = category;
@@ -52,5 +55,7 @@ public class ProductEntity {
         this.salePrice = salePrice;
         this.amount = amount;
         this.minAmount = minAmount;
+        this.productEnable = true;
+        this.createdAt = createdAt;
     }
 }
