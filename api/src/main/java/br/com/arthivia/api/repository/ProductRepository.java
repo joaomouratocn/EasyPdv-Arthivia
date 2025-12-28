@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Integer>{
@@ -16,4 +17,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     @Transactional
     @Query("UPDATE ProductEntity p SET p.productEnable = false WHERE p.productId = :productId")
     void disableProduct(@Param("productId") Integer productId);
+
+    List<ProductEntity> findAllByCategoryCategoryIdAndProductEnableTrue(@Param("categoryId") Integer categoryId);
 }

@@ -55,7 +55,7 @@ public class ProductEntity {
         this.salePrice = salePrice;
         this.amount = amount;
         this.minAmount = minAmount;
-        this.productEnable = true;
+        this.productEnable = productEnable;
         this.createdAt = createdAt;
     }
 }

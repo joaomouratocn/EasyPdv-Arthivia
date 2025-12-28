@@ -7,6 +7,7 @@ import br.com.arthivia.api.model.dtos.AuthResponseDto;
 import br.com.arthivia.api.model.entitys.UserEntity;
 import br.com.arthivia.api.repository.UserRepository;
 import br.com.arthivia.api.util.UserRole;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +35,12 @@ class AuthServiceTest {
     @Mock
     AuthenticationManager authenticationManager;
 
-    @InjectMocks
-    AuthService authService;
+    AuthService authService;  // ← Declare sem @InjectMocks
+
+    @BeforeEach
+    void setUp() {
+        authService = new AuthService(DEFAULT_PASS, userRepository, tokenService, authenticationManager);
+    }
 
     @Test
     @DisplayName("Should throw error when user not found")

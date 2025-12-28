@@ -27,41 +27,49 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Should return empty when user not found")
     void findByLoginAndEnableTrueCase1() {
+        //Act
         Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        //Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
     @DisplayName("Should return empty when user disabled")
     void findByLoginAndEnableTrueCase2() {
+        //Arrange
         var userEntity = new UserEntity("TEST", "TEST", "passHash", UserRole.ADMIN, false);
         entityManager.persist(userEntity);
-        entityManager.flush(); // ✅ CRÍTICO: garante que query vê o dado
-
+        entityManager.flush();
+        //Act
         Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        //Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
     @DisplayName("Should return user when enabled")
     void findByLoginAndEnableTrueCase3() {
+        //Arrange
         var userEntity = new UserEntity("TEST", "TEST", "passHash", UserRole.ADMIN, true);
         entityManager.persist(userEntity);
         entityManager.flush();
-
+        //Act
         Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        //Assert
         assertTrue(result.isPresent());
-        assertEquals("TEST", result.get().getLogin()); // valida conteúdo
+        assertEquals("TEST", result.get().getLogin());
     }
 
     @Test
     @DisplayName("Should ignore disabled users for different login")
     void findByLoginAndEnableTrueCase4() {
+        //Arrange
         var userEntity = new UserEntity("DIFFERENT", "DIFFERENT", "passHash", UserRole.ADMIN, false);
         entityManager.persist(userEntity);
         entityManager.flush();
-
+        //Act
         Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        //Assert
         assertTrue(result.isEmpty());
     }
 }
