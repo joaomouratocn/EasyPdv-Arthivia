@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,14 +70,14 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("Should return all enabled products by category id")
-    void testFindAllByCategoryCategoryIdAndProductEnableTrueCase1() {
+    void FindAllByCategoryIdAndProductEnableTrueCase1() {
         //Arrange
         entityManager.persist(testCategory);
         createProduct("1234567", true, testCategory);
         createProduct("7654321", false, testCategory);
 
         //Act
-        var result = productRepository.findAllByCategoryCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
+        var result = productRepository.findAllByCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
 
         //Assert
         assertNotNull(result);
@@ -87,29 +86,81 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("Should return empty when products enable false")
-    void testFindAllByCategoryCategoryIdAndProductEnableTrueCase2() {
+    void FindAllByCategoryIdAndProductEnableTrueCase2() {
         //Arrange
         entityManager.persist(testCategory);
         createProduct("1234567", false, testCategory);
         createProduct("7654321", false, testCategory);
 
         //Act
-        var result = productRepository.findAllByCategoryCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
+        var result = productRepository.findAllByCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
 
         //Assert
         assertThat(result).isEmpty();
     }
 
+    @Test
+    @DisplayName("Should return only products that be enable true and testCategory")
+    void findAllByCategoryIdAndProductEnableTrueCase1() {
+        //Arrange
+        CategoryEntity categoryEntity = new CategoryEntity("Category1");
+        entityManager.persist(testCategory);
+        entityManager.persist(categoryEntity);
+        createProduct("1234567", true, testCategory);
+        createProduct("7654321", true, testCategory);
+        createProduct("9876543", true, categoryEntity);
+        createProduct("8765432", false, testCategory);
+
+        //Act
+        var result = productRepository.findAllByCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
+
+        //Assert
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.getFirst().getBarCode()).isEqualTo("1234567");
+    }
+
+    @Test
+    @DisplayName("Should return only products that be enable true and testCategory")
+    void findAllByCategoryIdAndProductEnableTrueCase2() {
+        //Arrange
+        CategoryEntity categoryEntity = new CategoryEntity("Category1");
+        entityManager.persist(testCategory);
+        entityManager.persist(categoryEntity);
+        createProduct("9876543", true, categoryEntity);
+        createProduct("8765432", false, testCategory);
+
+        //Act
+        var result = productRepository.findAllByCategoryIdAndProductEnableTrue(testCategory.getCategoryId());
+
+        //Assert
+        assertThat(result).isEmpty();
+    }
+
+
+    @Test
+    @DisplayName("should return product")
+    void findByIdAndProductEnableTrueCase1() {
+        //Arrange
+        CategoryEntity categoryEntity = new CategoryEntity("TEST");
+        Integer productEnable = createProduct("1234567", true, categoryEntity);
+
+        //Act
+        Optional<ProductEntity> result = productRepository.findByProductIdAndProductEnableTrue( 1);
+
+        //Assert
+        assertThat(result.isPresent());
+    }
+
     private Integer createProduct(String barcode, Boolean productEnable, CategoryEntity testCategory) {
         ProductEntity productEntity = new ProductEntity(barcode,
                 "NAME",
-                testCategory,
+                testCategory.getCategoryId(),
+                "UNIT",
                 new BigDecimal("2.00"),
                 new BigDecimal("10.00"),
                 new BigDecimal("100"),
                 new BigDecimal("10"),
-                productEnable,
-                LocalDateTime.now()
+                productEnable
         );
         entityManager.persist(testCategory);
         entityManager.persist(productEntity);

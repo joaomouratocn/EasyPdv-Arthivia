@@ -41,7 +41,7 @@ public class CategoryService {
     public SuccessResponse deleteCategory(Integer categoryId) {
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
 
-        List<ProductEntity> allByCategoryCategoryIdAndProductEnableTrue = productRepository.findAllByCategoryCategoryIdAndProductEnableTrue(categoryId);
+        List<ProductEntity> allByCategoryCategoryIdAndProductEnableTrue = productRepository.findAllByCategoryIdAndProductEnableTrue(categoryId);
         if (!allByCategoryCategoryIdAndProductEnableTrue.isEmpty()) {
             throw new CategoryWithProductsException();
         }

@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Integer>{
-    Optional<ProductEntity> findByBarCodeAndProductEnableTrue(String barCode);
-
     @Modifying
     @Transactional
     @Query("UPDATE ProductEntity p SET p.productEnable = false WHERE p.productId = :productId")
     void disableProduct(@Param("productId") Integer productId);
 
-    List<ProductEntity> findAllByCategoryCategoryIdAndProductEnableTrue(@Param("categoryId") Integer categoryId);
+    Optional<ProductEntity> findByProductIdAndProductEnableTrue(Integer id);
+
+    Optional<ProductEntity> findByBarCode(String barCode);
+
+    Optional<ProductEntity> findByBarCodeAndProductEnableTrue(String barCode);
+
+    List<ProductEntity> findAllByCategoryIdAndProductEnableTrue(@Param("categoryId") Integer categoryId);
 }

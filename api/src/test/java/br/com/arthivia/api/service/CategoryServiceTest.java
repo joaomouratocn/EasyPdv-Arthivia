@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,17 +130,17 @@ class CategoryServiceTest {
         CategoryEntity categoryEntity = new CategoryEntity("TEST");
         categoryEntity.setCategoryId(1);
         when(categoryRepository.findById(1)).thenReturn(Optional.of(categoryEntity));
-        when(productRepository.findAllByCategoryCategoryIdAndProductEnableTrue(1)).thenReturn(
+        when(productRepository.findAllByCategoryIdAndProductEnableTrue(1)).thenReturn(
                 List.of(
                         new ProductEntity("1234567",
                                 "PRODUCT",
-                                categoryEntity,
+                                categoryEntity.getCategoryId(),
+                                "UNIT",
                                 new BigDecimal("2.00"),
                                 new BigDecimal("10.00"),
                                 new BigDecimal("100"),
                                 new BigDecimal("10"),
-                                false,
-                                LocalDateTime.now()
+                                false
                         )
                 )
         );
@@ -151,7 +150,7 @@ class CategoryServiceTest {
                 CategoryWithProductsException.class,
                 () -> categoryService.deleteCategory(1)
         );
-        verify(productRepository, times(1)).findAllByCategoryCategoryIdAndProductEnableTrue(1);
+        verify(productRepository, times(1)).findAllByCategoryIdAndProductEnableTrue(1);
     }
 
     @Test
