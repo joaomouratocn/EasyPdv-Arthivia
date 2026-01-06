@@ -1,5 +1,6 @@
 package br.com.arthivia.api.model.entitys;
 
+import br.com.arthivia.api.model.dtos.UserInsertDto;
 import br.com.arthivia.api.util.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -43,12 +44,20 @@ public class UserEntity implements UserDetails {
         this.enable = enable;
     }
 
+    public UserEntity(UserInsertDto userInsertDto, String passHash) {
+        this.name = userInsertDto.name();
+        this.login = userInsertDto.login();
+        this.passHash = passHash;
+        this.userRole = userInsertDto.role();
+        this.enable = userInsertDto.enable();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.userRole == UserRole.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("CHECKOUT"));
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         } else {
-            return List.of(new SimpleGrantedAuthority("CHECKOUT"));
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
     }
 

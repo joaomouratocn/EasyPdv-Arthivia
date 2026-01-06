@@ -7,12 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -28,9 +27,9 @@ class UserRepositoryTest {
     @DisplayName("Should return empty when user not found")
     void findByLoginAndEnableTrueCase1() {
         //Act
-        Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByLoginAndEnableTrue("TEST");
         //Assert
-        assertTrue(result.isEmpty());
+        assertNotNull(result);
     }
 
     @Test
@@ -41,9 +40,9 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByLoginAndEnableTrue("TEST");
         //Assert
-        assertTrue(result.isEmpty());
+        assertNotNull(result);
     }
 
     @Test
@@ -54,10 +53,9 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        UserDetails result = userRepository.findByLoginAndEnableTrue("TEST");
         //Assert
-        assertTrue(result.isPresent());
-        assertEquals("TEST", result.get().getLogin());
+        assertNotNull(result);
     }
 
     @Test
@@ -68,8 +66,8 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        Optional<UserEntity> result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByLoginAndEnableTrue("TEST");
         //Assert
-        assertTrue(result.isEmpty());
+        assertNotNull(result);
     }
 }

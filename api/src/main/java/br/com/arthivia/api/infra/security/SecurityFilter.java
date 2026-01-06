@@ -1,6 +1,5 @@
 package br.com.arthivia.api.infra.security;
 
-import br.com.arthivia.api.model.entitys.UserEntity;
 import br.com.arthivia.api.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,12 +30,12 @@ public class SecurityFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String token = recoverToken(request);
 
-        if(token != null){
+        if (token != null) {
             String username = tokenService.validateToken(token);
-            UserEntity userEntity = userRepository.findByLoginAndEnableTrue(username).orElseThrow(() -> new RuntimeException("Error find user(filter chain)"));
+            var user = userRepository.findByLoginAndEnableTrue(username);
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(userEntity, null, userEntity.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(user, null, user.get().getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
 
