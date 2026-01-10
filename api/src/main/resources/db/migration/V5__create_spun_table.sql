@@ -19,6 +19,6 @@ CREATE TABLE spun_payment (
     late_date DATE NOT NULL,
     payment_date TIMESTAMP,
     fees DECIMAL(10,4) DEFAULT 0,
-    status spun_status DEFAULT 'OPEN',
+    status VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

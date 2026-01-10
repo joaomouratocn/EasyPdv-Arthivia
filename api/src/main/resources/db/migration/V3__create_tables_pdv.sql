@@ -20,7 +20,7 @@ CREATE TABLE product (
 CREATE TABLE sale (
     sale_id SERIAL PRIMARY KEY,
     date_and_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sale_status sale_status DEFAULT 'OPEN',
+    sale_status VARCHAR(20) NOT NULL,
     tot_sale DECIMAL(12,2) DEFAULT 0,
     tot_discount DECIMAL(12,2) DEFAULT 0,
     tot_add DECIMAL(12,2) DEFAULT 0,
@@ -43,7 +43,7 @@ CREATE TABLE sale_item (
 CREATE TABLE payment (
     payment_id SERIAL PRIMARY KEY,
     id_venda Integer REFERENCES sale(sale_id) ON DELETE CASCADE,
-    payment_type payment_type NOT NULL,
+    payment_type VARCHAR(20) NOT NULL,
     value_payment DECIMAL(12,2) NOT NULL,
     change_value DECIMAL(12,2) DEFAULT 0
 );

@@ -25,7 +25,7 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<SuccessResponse> register(@RequestBody @Valid UserInsertDto userInsertDto) {
         var result = authService.register(userInsertDto);
         return ResponseEntity.ok(result);

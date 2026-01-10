@@ -1,6 +1,7 @@
 package br.com.arthivia.api.model.dtos;
 
-import br.com.arthivia.api.util.UserRole;
+
+import br.com.arthivia.api.util.Enums.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,4 +19,5 @@ public record UserInsertDto(
         UserRole role,
         @NotNull(message = "Invalid enable status")
         boolean enable
-) {}
+) {
+}

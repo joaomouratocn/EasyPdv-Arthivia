@@ -3,7 +3,7 @@ CREATE TABLE stock (
     product_id Integer REFERENCES product(product_id),
     user_id Integer REFERENCES users(user_id),
     sale_id Integer REFERENCES sale(sale_id),
-    payment_type payment_type NOT NULL,
+    payment_type VARCHAR(20) NOT NULL,
     amount DECIMAL(12,3) NOT NULL,
     unit_price DECIMAL(10,2),
     description_stock TEXT,

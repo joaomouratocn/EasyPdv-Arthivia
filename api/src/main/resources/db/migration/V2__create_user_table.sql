@@ -3,7 +3,7 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     login VARCHAR(50) UNIQUE NOT NULL,
     pass_hash VARCHAR(255) NOT NULL,
-    role user_role NOT NULL,
+    role VARCHAR(20) NOT NULL,
     enable BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

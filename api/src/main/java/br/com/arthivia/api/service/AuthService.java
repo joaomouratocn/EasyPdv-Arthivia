@@ -1,5 +1,6 @@
 package br.com.arthivia.api.service;
 
+import br.com.arthivia.api.infra.exceptions.custom.UserAlreadyExists;
 import br.com.arthivia.api.infra.security.TokenService;
 import br.com.arthivia.api.model.SuccessResponse;
 import br.com.arthivia.api.model.dtos.AuthRequestDto;
@@ -11,8 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -48,7 +52,9 @@ public class AuthService {
     public SuccessResponse register(UserInsertDto userInsertDto) {
         String normalizedLogin = userInsertDto.login().toUpperCase();
 
-        userRepository.findByLoginAndEnableTrue(normalizedLogin);
+        Optional<UserDetails> userAlreadyExists = userRepository.findByLoginAndEnableTrue(normalizedLogin);
+
+        if (userAlreadyExists.isPresent()){throw new UserAlreadyExists();}
 
         String passHash = new BCryptPasswordEncoder().encode(userInsertDto.password());
         UserEntity userEntity = new UserEntity(userInsertDto, passHash);

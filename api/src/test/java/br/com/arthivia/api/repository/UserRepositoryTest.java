@@ -1,7 +1,8 @@
 package br.com.arthivia.api.repository;
 
+import br.com.arthivia.api.infra.exceptions.custom.UserNotFoundException;
 import br.com.arthivia.api.model.entitys.UserEntity;
-import br.com.arthivia.api.util.UserRole;
+import br.com.arthivia.api.util.Enums.UserRole;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        UserDetails result = userRepository.findByLoginAndEnableTrue("TEST");
+        UserDetails result = userRepository.findByLoginAndEnableTrue("TEST").orElseThrow(UserNotFoundException::new);
         //Assert
         assertNotNull(result);
     }

@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorized -> authorized
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers("/categories/save").hasAnyRole("ADMIN")
+                        .requestMatchers("/auth/register").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

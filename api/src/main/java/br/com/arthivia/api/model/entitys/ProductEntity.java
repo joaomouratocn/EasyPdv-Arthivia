@@ -1,6 +1,5 @@
 package br.com.arthivia.api.model.entitys;
 
-import br.com.arthivia.api.model.dtos.CategoryResponseDto;
 import br.com.arthivia.api.model.dtos.ProductInsertDto;
 import jakarta.persistence.*;
 import lombok.Getter;

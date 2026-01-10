@@ -1,7 +1,8 @@
 package br.com.arthivia.api.model.entitys;
 
 import br.com.arthivia.api.model.dtos.UserInsertDto;
-import br.com.arthivia.api.util.UserRole;
+import br.com.arthivia.api.util.Enums;
+import br.com.arthivia.api.util.Util;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+
+import static br.com.arthivia.api.util.Enums.UserRole;
 
 @Getter
 @Entity(name = "users")
@@ -30,7 +33,7 @@ public class UserEntity implements UserDetails {
     String passHash;
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    UserRole userRole;
+    Enums.UserRole userRole;
     @Column(name = "enable")
     Boolean enable;
     @Column(name = "created_at", insertable = false)
@@ -45,8 +48,8 @@ public class UserEntity implements UserDetails {
     }
 
     public UserEntity(UserInsertDto userInsertDto, String passHash) {
-        this.name = userInsertDto.name();
-        this.login = userInsertDto.login();
+        this.name = Util.normalizeUpper(userInsertDto.name());
+        this.login = Util.normalizeUpper(userInsertDto.login());
         this.passHash = passHash;
         this.userRole = userInsertDto.role();
         this.enable = userInsertDto.enable();

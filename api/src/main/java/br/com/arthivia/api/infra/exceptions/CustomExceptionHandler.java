@@ -1,7 +1,8 @@
 package br.com.arthivia.api.infra.exceptions;
 
+import br.com.arthivia.api.infra.exceptions.custom.UserAlreadyExists;
 import br.com.arthivia.api.infra.exceptions.custom.UserNotFoundException;
-import br.com.arthivia.api.util.ErrorResponse;
+import br.com.arthivia.api.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,13 +14,13 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
-    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus statusCode, String message){
+    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus statusCode, String message) {
         ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), message);
         return new ResponseEntity<>(errorResponse, statusCode);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> generalErrorHandler(Exception e){
+    public ResponseEntity<ErrorResponse> generalErrorHandler(Exception e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
@@ -33,7 +34,12 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> UserNotFoundException(Exception e){
+    public ResponseEntity<ErrorResponse> UserNotFoundException(Exception e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExists.class)
+    public ResponseEntity<ErrorResponse> UserAlreadyExists(Exception e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }
