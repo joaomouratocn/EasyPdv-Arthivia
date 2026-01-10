@@ -35,7 +35,7 @@ public class CategoryService {
 
         categoryRepository.save(categoryEntity);
 
-        return new SuccessResponse("Category saved successfully");
+        return new SuccessResponse("Category updated successfully");
     }
 
     public SuccessResponse deleteCategory(Integer categoryId) {

@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class UserDetailsConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return login -> userRepository.findByLoginAndEnableTrue(login.toUpperCase()).orElseThrow(UsernameNotFoundException::new);
+        return username -> userRepository
+                .findByLoginAndEnableTrue(username.toUpperCase())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
