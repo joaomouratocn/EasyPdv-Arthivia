@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorized -> authorized
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers("/auth/register").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/save").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

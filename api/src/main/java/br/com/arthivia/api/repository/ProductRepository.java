@@ -23,4 +23,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     Optional<ProductEntity> findByBarCodeAndProductEnableTrue(String barCode);
 
     List<ProductEntity> findAllByCategoryIdAndProductEnableTrue(@Param("categoryId") Integer categoryId);
+
+    List<ProductEntity> findByProductNameContainingAndProductEnableTrue(String name);
 }
