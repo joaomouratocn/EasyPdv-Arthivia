@@ -2,24 +2,41 @@
   <span class="text-end text-gray-600 px-2.5"
     >Versão: <span class="font-semibold">1.0.0</span></span
   >
-  <form class="flex flex-col gap-2 items-center justify-center">
+  <form
+    #frmLogin
+    (submit)="login()"
+    [formGroup]="formFields"
+    class="flex flex-col gap-2 items-center justify-center"
+  >
     <img ngSrc="/logo.png" alt="Arthivia Logo" width="151" height="120" priority />
     <span class="text-4xl text-gray-400 font-semibold">Fácil-PDV</span>
     <div>
       <label id="username" class="block text-gray-400 px-2.5">Usuário:</label>
       <input
         type="text"
+        id="username"
+        name="username"
+        formControlName="username"
         placeholder="Insira nome de usuário"
         class="p-1.5 border border-gray-400 rounded-xl w-60"
       />
+      @if (isInvalidField('username')) {
+        <p class="text-red-500 px-3.5">Este campo é obrigatório</p>
+      }
     </div>
     <div>
       <label id="password" class="block text-gray-400 px-2.5">Senha:</label>
       <input
         type="password"
+        id="password"
+        name="password"
+        formControlName="password"
         placeholder="Insira senha"
         class="p-1.5 border border-gray-400 rounded-xl w-60"
       />
+      @if (isInvalidField('password')) {
+        <p class="text-red-500 px-3.5">Este campo é obrigatório</p>
+      }
     </div>
     <button
       type="submit"
