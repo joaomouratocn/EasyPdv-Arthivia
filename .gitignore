@@ -12,25 +12,46 @@ api/application-dev.properties
 
 ===== FRONTEND =====
 # Arquivos e pastas do Visual Studio
-app/.vs/
-app/*.user
-app/*.suo
-app/*.userosscache
-app/*.sln.docstates
+# Compiled output
+app/dist
+app/tmp
+app/out-tsc
+app/bazel-out
 
-# Diretórios de build
-app/bin/
-app/obj/
+# Node
+app/node_modules
+appn/pm-debug.log
+app/yarn-error.log
 
-# Pacotes e dependências
-app/*.nupkg
-app/packages/
-app/*.dll
+# IDEs and editors
+app/.idea/
+app/.project
+app/.classpath
+app/.c9/
+app/*.launch
+app/.settings/
+app/*.sublime-workspace
 
-# Logs, temporários
-app/*.log
-app/*.tmp
+# Visual Studio Code
+app/.vscode/*
+app/!.vscode/settings.json
+app/!.vscode/tasks.json
+app/!.vscode/launch.json
+app/!.vscode/extensions.json
+app/!.vscode/mcp.json
+app/.history/*
 
-# Configurações locais
-*.dbmdl
-*.db
+# Miscellaneous
+app/.angular/cache
+app/.sass-cache/
+app/connect.lock
+app/coverage
+app/libpeerconnection.log
+testem.log
+app/typings
+__screenshots__/
+
+# System files
+app/.DS_Store
+app/Thumbs.db
+
