@@ -27,7 +27,7 @@ public class UserEntity implements UserDetails {
     Integer userId;
     @Column(name = "name")
     String name;
-    @Column(name = "login")
+    @Column(name = "username")
     String login;
     @Column(name = "pass_hash")
     String passHash;

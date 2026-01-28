@@ -38,7 +38,7 @@ public class AuthService {
     }
 
     public AuthResponseDto auth(AuthRequestDto authRequestDto) {
-        String normalizedLogin = authRequestDto.login().toUpperCase();
+        String normalizedLogin = authRequestDto.username().toUpperCase();
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(normalizedLogin, authRequestDto.password());
 

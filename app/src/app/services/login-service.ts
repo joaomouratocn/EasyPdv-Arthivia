@@ -12,7 +12,7 @@ export class LoginService {
   constructor(private httpClient: HttpClient) {}
 
   login(loginModel: LoginModel): Observable<LoginResponse> {
-    const path = '/login';
+    const path = '/auth/login';
     return this.httpClient.post<LoginResponse>(App.BASE_URL + path, loginModel);
   }
 }

@@ -60,7 +60,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should ignore disabled users for different login")
+    @DisplayName("Should ignore disabled users for different username")
     void findByLoginAndEnableTrueCase4() {
         //Arrange
         var userEntity = new UserEntity("DIFFERENT", "DIFFERENT", "passHash", UserRole.ADMIN, false);

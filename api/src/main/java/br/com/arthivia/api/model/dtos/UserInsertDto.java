@@ -9,8 +9,8 @@ public record UserInsertDto(
         @NotNull(message = "Invalid name")
         @NotBlank(message = "Invalid name")
         String name,
-        @NotNull(message = "Invalid login")
-        @NotBlank(message = "Invalid login")
+        @NotNull(message = "Invalid username")
+        @NotBlank(message = "Invalid username")
         String login,
         @NotNull(message = "Invalid password")
         @NotBlank(message = "Invalid password")

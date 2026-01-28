@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-5 mx-auto w-7xl h-screen p-5 rounded-2xl shadow-2xl">
+  <div class="flex flex-col gap-2.5">
+    <h1 class="font-bold text-2xl">Categorias</h1>
+    <div class="flex gap-2">
+      <input
+        type="text"
+        name="categorySearch"
+        id="categorySearch"
+        [(ngModel)]="categorySearch"
+        placeholder="Digite o nome da procura aqui"
+        class="w-full border border-gray-400 rounded px-2 py-1"
+      />
+      <button class="bg-blue-500 px-2 py-1 rounded text-white cursor-pointer font-semibold">
+        Procurar
+      </button>
+    </div>
+  </div>
+  <ul class="flex flex-col gap-2 flex-1 border rounded-2xl p-1.5">
+    <li class="flex justify-between items-center shadow rounded p-2">
+      <span class="font-semibold text-lg">Alimentos</span>
+      <div class="flex gap-0.5">
+        <button class="bg-green-500 text-white font-bold border rounded px-2 py-0.5 cursor-pointer">
+          Editar
+        </button>
+        <button
+          class="bg-red-500 border text-white font-semibold rounded px-2 py-0.5 cursor-pointer"
+        >
+          Deletar
+        </button>
+      </div>
+    </li>
+  </ul>
+  <button class="bg-blue-500 text-white font-semibold px-5 py-1 rounded ml-auto">
+    Nova Categoria
+  </button>
+</div>

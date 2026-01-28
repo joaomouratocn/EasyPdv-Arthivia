@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public record AuthRequestDto(
         @NotNull(message = "Invalid username")
         @NotBlank(message = "Invalid username")
-        String login,
+        String username,
         @NotNull(message = "Invalid password")
         @NotBlank(message = "Invalid password")
         String password
