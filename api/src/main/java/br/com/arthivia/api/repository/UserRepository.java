@@ -7,5 +7,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    Optional<UserDetails> findByLoginAndEnableTrue(String normalizedLogin);
+    Optional<UserDetails> findByUsernameAndEnableTrue(String normalizedLogin);
 }

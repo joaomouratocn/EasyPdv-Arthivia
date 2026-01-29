@@ -11,7 +11,7 @@ public record UserInsertDto(
         String name,
         @NotNull(message = "Invalid username")
         @NotBlank(message = "Invalid username")
-        String login,
+        String username,
         @NotNull(message = "Invalid password")
         @NotBlank(message = "Invalid password")
         String password,

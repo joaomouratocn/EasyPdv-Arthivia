@@ -25,7 +25,7 @@ public class TokenService {
             assert userEntity != null;
             return JWT.create()
                     .withIssuer("bck-easyPDV")
-                    .withSubject(userEntity.getLogin())
+                    .withSubject(userEntity.getUsername())
                     .withClaim("id", userEntity.getUserId())
                     .withClaim("role", userEntity.getUserRole().name())
                     .withExpiresAt(generateExpDate())

@@ -11,7 +11,7 @@ public class UserDetailsConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> userRepository
-                .findByLoginAndEnableTrue(username.toUpperCase())
+                .findByUsernameAndEnableTrue(username.toUpperCase())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

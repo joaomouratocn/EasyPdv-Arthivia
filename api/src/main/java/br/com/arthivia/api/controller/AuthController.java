@@ -6,9 +6,13 @@ import br.com.arthivia.api.model.dtos.AuthResponseDto;
 import br.com.arthivia.api.model.dtos.UserInsertDto;
 import br.com.arthivia.api.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,10 +23,21 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/username")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid AuthRequestDto authRequestDto) {
-        var result = authService.auth(authRequestDto);
-        return ResponseEntity.ok(result);
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthRequestDto authRequestDto) {
+        var token = authService.auth(authRequestDto);
+
+        ResponseCookie cookie = ResponseCookie.from("access_token", token)
+                .httpOnly(true)
+                .secure(true) // somente HTTPS
+                .sameSite("Strict") // ou "Lax"
+                .path("/")
+                .maxAge(Duration.ofHours(1))
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Success");
     }
 
     @PostMapping("/register")

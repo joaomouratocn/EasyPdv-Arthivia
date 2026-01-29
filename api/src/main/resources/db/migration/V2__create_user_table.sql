@@ -1,7 +1,7 @@
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    login VARCHAR(50) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     pass_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL,
     enable BOOLEAN DEFAULT true,

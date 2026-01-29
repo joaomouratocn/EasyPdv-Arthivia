@@ -28,7 +28,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "name")
     String name;
     @Column(name = "username")
-    String login;
+    String username;
     @Column(name = "pass_hash")
     String passHash;
     @Column(name = "role")
@@ -39,9 +39,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "created_at", insertable = false)
     LocalDateTime createdAt;
 
-    public UserEntity(String name, String login, String passHash, UserRole role, boolean enable) {
+    public UserEntity(String name, String username, String passHash, UserRole role, boolean enable) {
         this.name = name;
-        this.login = login;
+        this.username = username;
         this.passHash = passHash;
         this.userRole = role;
         this.enable = enable;
@@ -49,7 +49,7 @@ public class UserEntity implements UserDetails {
 
     public UserEntity(UserInsertDto userInsertDto, String passHash) {
         this.name = Util.normalizeUpper(userInsertDto.name());
-        this.login = Util.normalizeUpper(userInsertDto.login());
+        this.username = Util.normalizeUpper(userInsertDto.username());
         this.passHash = passHash;
         this.userRole = userInsertDto.role();
         this.enable = userInsertDto.enable();
@@ -71,6 +71,6 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 }

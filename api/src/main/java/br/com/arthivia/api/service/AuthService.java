@@ -37,22 +37,20 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public AuthResponseDto auth(AuthRequestDto authRequestDto) {
+    public String auth(AuthRequestDto authRequestDto) {
         String normalizedLogin = authRequestDto.username().toUpperCase();
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(normalizedLogin, authRequestDto.password());
 
         Authentication authenticate = authenticationManager.authenticate(usernamePassword);
 
-        String token = tokenService.generateToken(authenticate);
-
-        return new AuthResponseDto("test", token, false);
+        return tokenService.generateToken(authenticate);
     }
 
     public SuccessResponse register(UserInsertDto userInsertDto) {
-        String normalizedLogin = userInsertDto.login().toUpperCase();
+        String normalizedLogin = userInsertDto.username().toUpperCase();
 
-        Optional<UserDetails> userAlreadyExists = userRepository.findByLoginAndEnableTrue(normalizedLogin);
+        Optional<UserDetails> userAlreadyExists = userRepository.findByUsernameAndEnableTrue(normalizedLogin);
 
         if (userAlreadyExists.isPresent()){throw new UserAlreadyExists();}
 

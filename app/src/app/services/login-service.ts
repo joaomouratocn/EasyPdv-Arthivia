@@ -15,4 +15,14 @@ export class LoginService {
     const path = '/auth/login';
     return this.httpClient.post<LoginResponse>(App.BASE_URL + path, loginModel);
   }
+
+  /**
+   *   this.http.post('/api/login', dados, {
+        withCredentials: true
+      })
+
+      this.http.get('/api/protegido', {
+      ithCredentials: true
+      })
+   */
 }
