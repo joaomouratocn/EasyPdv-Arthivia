@@ -1,40 +1,44 @@
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoginService } from '../../services/login-service';
+import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
   imports: [NgOptimizedImage, ReactiveFormsModule],
-  templateUrl: './login-page.html',
-  styleUrl: './login-page.css',
+  templateUrl: './auth-page.html',
+  styleUrl: './auth-page.css',
 })
-export class LoginPage {
+export class AuthPage {
   formFields = new FormGroup({
     username: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
     password: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
   });
 
   constructor(
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
-  login() {
+  auth() {
     this.formFields.markAllAsTouched();
 
     if (this.formFields.invalid) {
       return;
     }
 
-    this.loginService.login(this.formFields.getRawValue()).subscribe({
+    this.authService.auth(this.formFields.getRawValue()).subscribe({
       next: (response) => {
-        this.router.navigate(['home']);
+        this.authService.setLoggedUser(response.name);
+        localStorage.setItem('name', response.name);
+
+        this.router.navigate(['']);
       },
       error: (err) => {
-        console.error('Erro no login', err);
+        const message = err.error?.message;
+        this.showAlert(message);
       },
     });
   }
@@ -45,5 +49,9 @@ export class LoginPage {
     } else {
       return false;
     }
+  }
+
+  showAlert(message: string) {
+    window.alert(message);
   }
 }

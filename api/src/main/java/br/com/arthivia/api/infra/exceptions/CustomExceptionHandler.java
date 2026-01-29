@@ -5,6 +5,7 @@ import br.com.arthivia.api.infra.exceptions.custom.UserNotFoundException;
 import br.com.arthivia.api.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,6 +23,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> generalErrorHandler(Exception e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> AuthenticationException(Exception e) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, "Nome de usuário ou senha invalído");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

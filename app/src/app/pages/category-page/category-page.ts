@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CategoryResponseInterface } from '../../models/interfaces/CategoryResponseInterface';
+import { CategoryResponseInterface } from '../../models/interfaces/categoty-response-interface';
 
 @Component({
   selector: 'app-category-page',

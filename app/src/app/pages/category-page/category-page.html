@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-5 mx-auto w-7xl h-screen p-5 rounded-2xl shadow-2xl">
-  <div class="flex flex-col gap-2.5">
+  <div class="flex flex-col gap-2.5 p-5 rounded-2xl">
     <h1 class="font-bold text-2xl">Categorias</h1>
     <div class="flex gap-2">
       <input
@@ -10,13 +10,16 @@
         placeholder="Digite o nome da procura aqui"
         class="w-full border border-gray-400 rounded px-2 py-1"
       />
-      <button class="bg-blue-500 px-2 py-1 rounded text-white cursor-pointer font-semibold">
+      <button
+        class="bg-blue-500 hover:bg-blue-700 px-2 py-1 rounded text-white cursor-pointer font-semibold"
+      >
         Procurar
       </button>
     </div>
   </div>
-  <ul class="flex flex-col gap-2 flex-1 border rounded-2xl p-1.5">
-    <li class="flex justify-between items-center shadow rounded p-2">
+  <hr class="text-gray-300" />
+  <ul class="flex flex-col gap-2 flex-1 rounded-2xl p-5">
+    <li class="flex justify-between items-center shadow-2xl rounded p-3">
       <span class="font-semibold text-lg">Alimentos</span>
       <div class="flex gap-0.5">
         <button class="bg-green-500 text-white font-bold border rounded px-2 py-0.5 cursor-pointer">
@@ -30,7 +33,7 @@
       </div>
     </li>
   </ul>
-  <button class="bg-blue-500 text-white font-semibold px-5 py-1 rounded ml-auto">
+  <button class="bg-blue-500 text-white font-semibold px-5 py-1 rounded ml-auto hover:bg-blue-700">
     Nova Categoria
   </button>
 </div>

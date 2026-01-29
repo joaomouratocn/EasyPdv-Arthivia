@@ -28,7 +28,7 @@ class UserRepositoryTest {
     @DisplayName("Should return empty when user not found")
     void findByLoginAndEnableTrueCase1() {
         //Act
-        var result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByUsernameAndEnableTrue("TEST");
         //Assert
         assertNotNull(result);
     }
@@ -41,7 +41,7 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        var result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByUsernameAndEnableTrue("TEST");
         //Assert
         assertNotNull(result);
     }
@@ -54,7 +54,7 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        UserDetails result = userRepository.findByLoginAndEnableTrue("TEST").orElseThrow(UserNotFoundException::new);
+        UserDetails result = userRepository.findByUsernameAndEnableTrue("TEST").orElseThrow(UserNotFoundException::new);
         //Assert
         assertNotNull(result);
     }
@@ -67,7 +67,7 @@ class UserRepositoryTest {
         entityManager.persist(userEntity);
         entityManager.flush();
         //Act
-        var result = userRepository.findByLoginAndEnableTrue("TEST");
+        var result = userRepository.findByUsernameAndEnableTrue("TEST");
         //Assert
         assertNotNull(result);
     }
