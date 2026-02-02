@@ -29,16 +29,13 @@ export class AuthPage {
       return;
     }
 
-    this.authService.auth(this.formFields.getRawValue()).subscribe({
-      next: (response) => {
-        this.authService.setLoggedUser(response.name);
-        localStorage.setItem('name', response.name);
-
+    this.authService.authRequest(this.formFields.getRawValue()).subscribe({
+      next: (result) => {
+        this.authService.setLoggedUser(result.name);
         this.router.navigate(['']);
       },
       error: (err) => {
-        const message = err.error?.message;
-        this.showAlert(message);
+        console.log(err?.error.message);
       },
     });
   }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/category")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
@@ -23,7 +23,7 @@ public class CategoryController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/save")
+    @PostMapping("/insert")
     ResponseEntity<SuccessResponse> saveCategory(@RequestBody @Valid CategoryInsertDto categoryInsertDto) {
         var result = categoryService.saveCategory(categoryInsertDto);
         return ResponseEntity.ok(result);

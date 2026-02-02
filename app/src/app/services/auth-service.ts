@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, ObservedValueOf } from 'rxjs';
 import { AuthResponse as AuthResponse } from '../models/interfaces/auth-response-interface';
 import { AuthModel } from '../models/models/auth-model';
 import { App } from '../app';
 import { Router } from '@angular/router';
 import { inject, Injectable, signal } from '@angular/core';
+import { SuccessResponse } from '../models/interfaces/SuccessResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +13,35 @@ import { inject, Injectable, signal } from '@angular/core';
 export class AuthService {
   private readonly router = inject(Router);
   private name = signal<string | null>(null);
-  private path = '/auth/login';
 
   constructor(private httpClient: HttpClient) {}
 
-  auth(loginModel: AuthModel): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(App.BASE_URL + this.path, loginModel);
+  authRequest(loginModel: AuthModel): Observable<AuthResponse> {
+    const path = 'auth/login';
+    return this.httpClient.post<AuthResponse>(App.BASE_URL + path, loginModel);
+  }
+
+  logoutRequest(): Observable<SuccessResponse> {
+    const path = 'auth/logout';
+    return this.httpClient.post<SuccessResponse>(
+      App.BASE_URL + path,
+      {},
+      { withCredentials: true },
+    );
   }
 
   logout() {
-    this.name.set(null);
-    localStorage.removeItem('name');
-    this.router.navigate(['/auth']);
+    this.logoutRequest().subscribe({
+      next: (result) => {
+        console.log(result.message);
+        this.name.set(null);
+        localStorage.removeItem('name');
+        this.router.navigate(['/auth']);
+      },
+      error: (err) => {
+        console.log(err?.error.message);
+      },
+    });
   }
 
   initAuth() {
@@ -42,15 +60,4 @@ export class AuthService {
   getLoggedUser() {
     return this.name();
   }
-
-  /**
-   *   this.http.post('/api/login', dados, {
-        withCredentials: true
-
-      })
-
-      this.http.get('/api/protegido', {
-      ithCredentials: true
-      })
-   */
 }

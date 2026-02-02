@@ -1,2 +1,9 @@
-<button (click)="go()">Categorias</button>
-<button (click)="logout()">Sair</button>
+<div class="flex gap-2">
+  <button (click)="go()" class="bg-blue-500 px-2 py-1 text-white font-semibold rounded">
+    Categorias
+  </button>
+  <button (click)="logout()" class="bg-red-500 px-2 py-1 text-white font-semibold">Sair</button>
+  <button (click)="insertCategory()" class="bg-green-500 font-semibold text-white px-2 py-1">
+    Salva Categoria
+  </button>
+</div>

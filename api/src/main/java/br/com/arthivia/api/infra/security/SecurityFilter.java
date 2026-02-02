@@ -3,6 +3,7 @@ package br.com.arthivia.api.infra.security;
 import br.com.arthivia.api.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +29,78 @@ public class SecurityFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        String token = recoverToken(request);
 
-        if (token != null) {
-            String username = tokenService.validateToken(token);
-            var user = userRepository.findByUsernameAndEnableTrue(username);
-
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(user, null, user.get().getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        // Ignora preflight
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        filterChain.doFilter(request, response);
-    }
+        String token = null;
 
-    private String recoverToken(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null) return null;
-        return authorization.substring(7);
+        // 1️⃣ Tenta pelo Authorization header (Insomnia)
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+
+        // 2️⃣ Se não veio no header, tenta pelo cookie (Angular)
+//        if (token == null && request.getCookies() != null) {
+//            for (Cookie cookie : request.getCookies()) {
+//                if ("authToken".equals(cookie.getName())) {
+//                    token = cookie.getValue();
+//                    break;
+//                }
+//            }
+//        }
+
+        System.out.println(request.getCookies());
+        if (token == null && request.getCookies() != null) {
+            System.out.println("🍪 TODOS COOKIES:");
+            for (Cookie cookie : request.getCookies()) {
+                System.out.println("  🍪 NOME: '" + cookie.getName() + "' | VALOR: '" +
+                        (cookie.getValue() != null ? cookie.getValue().substring(0, Math.min(20, cookie.getValue().length())) + "..." : "NULL") + "'");
+                if ("authToken".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    System.out.println("✅ TOKEN EXTRAÍDO: " + token);
+                    break;
+                }
+            }
+            System.out.println("🍪 TOKEN FINAL: " + token);
+        }
+
+        // 3️⃣ Se não tem token, segue sem autenticar
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 4️⃣ Valida token
+        String username;
+        try {
+            username = tokenService.validateToken(token);
+        } catch (Exception e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        var userOpt = userRepository.findByUsernameAndEnableTrue(username);
+        if (userOpt.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        var user = userOpt.get();
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        user.getAuthorities()
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        filterChain.doFilter(request, response);
     }
 }
