@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SuccessResponse } from '../models/interfaces/SuccessResponse';
-import { App } from '../app';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,7 +12,7 @@ export class CategoryService {
   insertCategory(categoryName: String): Observable<SuccessResponse> {
     const path = 'category/insert';
     return this.httpClient.post<SuccessResponse>(
-      App.BASE_URL + path,
+      path,
       { categoryName: categoryName },
       { withCredentials: true },
     );

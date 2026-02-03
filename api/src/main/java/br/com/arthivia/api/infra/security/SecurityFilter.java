@@ -38,44 +38,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         String token = null;
 
-        // 1️⃣ Tenta pelo Authorization header (Insomnia)
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
 
-        // 2️⃣ Se não veio no header, tenta pelo cookie (Angular)
-//        if (token == null && request.getCookies() != null) {
-//            for (Cookie cookie : request.getCookies()) {
-//                if ("authToken".equals(cookie.getName())) {
-//                    token = cookie.getValue();
-//                    break;
-//                }
-//            }
-//        }
 
-        System.out.println(request.getCookies());
-        if (token == null && request.getCookies() != null) {
-            System.out.println("🍪 TODOS COOKIES:");
-            for (Cookie cookie : request.getCookies()) {
-                System.out.println("  🍪 NOME: '" + cookie.getName() + "' | VALOR: '" +
-                        (cookie.getValue() != null ? cookie.getValue().substring(0, Math.min(20, cookie.getValue().length())) + "..." : "NULL") + "'");
-                if ("authToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    System.out.println("✅ TOKEN EXTRAÍDO: " + token);
-                    break;
-                }
-            }
-            System.out.println("🍪 TOKEN FINAL: " + token);
-        }
-
-        // 3️⃣ Se não tem token, segue sem autenticar
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 4️⃣ Valida token
         String username;
         try {
             username = tokenService.validateToken(token);

@@ -10,5 +10,4 @@ import { AuthService } from './services/auth-service';
 })
 export class App {
   protected readonly title = signal('app');
-  static BASE_URL = 'http://localhost:8080/';
 }

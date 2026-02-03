@@ -24,6 +24,10 @@ export class HomePage {
     this.authService.logout();
   }
 
+  refresh() {
+    this.authService.refreshResquest();
+  }
+
   insertCategory() {
     this.categoryService.insertCategory('Bebidas').subscribe({
       next: (result) => {

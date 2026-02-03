@@ -29,15 +29,7 @@ export class AuthPage {
       return;
     }
 
-    this.authService.authRequest(this.formFields.getRawValue()).subscribe({
-      next: (result) => {
-        this.authService.setLoggedUser(result.name);
-        this.router.navigate(['']);
-      },
-      error: (err) => {
-        console.log(err?.error.message);
-      },
-    });
+    this.authService.authRequest(this.formFields.getRawValue());
   }
 
   isInvalidField(nameField: string): boolean {

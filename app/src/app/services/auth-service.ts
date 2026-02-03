@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, ObservedValueOf } from 'rxjs';
 import { AuthResponse as AuthResponse } from '../models/interfaces/auth-response-interface';
 import { AuthModel } from '../models/models/auth-model';
-import { App } from '../app';
 import { Router } from '@angular/router';
 import { inject, Injectable, signal } from '@angular/core';
 import { SuccessResponse } from '../models/interfaces/SuccessResponse';
@@ -16,18 +15,35 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) {}
 
-  authRequest(loginModel: AuthModel): Observable<AuthResponse> {
-    const path = 'auth/login';
-    return this.httpClient.post<AuthResponse>(App.BASE_URL + path, loginModel);
+  authRequest(loginModel: AuthModel) {
+    const path = '/api/auth/login';
+    this.httpClient.post<AuthResponse>(path, loginModel).subscribe({
+      next: (result) => {
+        console.log(result);
+        this.name.set(result.name);
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        console.log(err?.error.message);
+      },
+    });
+  }
+
+  refreshResquest() {
+    const path = '/api/auth/refresh';
+    this.httpClient.post<AuthResponse>(path, {}, { withCredentials: true }).subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: (err) => {
+        console.log(err?.error.message);
+      },
+    });
   }
 
   logoutRequest(): Observable<SuccessResponse> {
-    const path = 'auth/logout';
-    return this.httpClient.post<SuccessResponse>(
-      App.BASE_URL + path,
-      {},
-      { withCredentials: true },
-    );
+    const path = '/api/auth/logout';
+    return this.httpClient.post<SuccessResponse>(path, {}, { withCredentials: true });
   }
 
   logout() {
