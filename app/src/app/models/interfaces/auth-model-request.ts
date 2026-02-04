@@ -1,4 +1,4 @@
-export interface AuthModel {
+export interface AuthModelRequest {
   username: string;
   password: string;
 }

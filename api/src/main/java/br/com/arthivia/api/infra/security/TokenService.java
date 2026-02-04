@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,17 +19,16 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(UserEntity userEntity, boolean refresh){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            var userEntity = (UserEntity) authentication.getPrincipal();
             assert userEntity != null;
             return JWT.create()
                     .withIssuer("bck-easyPDV")
                     .withSubject(userEntity.getUsername())
-                    .withClaim("id", userEntity.getUserId())
+                    .withClaim("username", userEntity.getUsername())
                     .withClaim("role", userEntity.getUserRole().name())
-                    .withExpiresAt(generateExpDate())
+                    .withExpiresAt(generateExpDate(refresh))
                     .sign(algorithm);
         } catch (JWTCreationException e) {
             throw new RuntimeException("Error while generating token");
@@ -48,7 +48,11 @@ public class TokenService {
         }
     }
 
-    private Instant generateExpDate() {
-        return LocalDateTime.now().plusMinutes(10L).toInstant(ZoneOffset.ofHours(-3));
+    private Instant generateExpDate(boolean isRefresh) {
+        if (isRefresh){
+            return LocalDateTime.now().plusHours(8).toInstant(ZoneOffset.ofHours(-3));
+        }else{
+            return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.ofHours(-3));
+        }
     }
 }

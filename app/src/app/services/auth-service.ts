@@ -1,26 +1,28 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable, ObservedValueOf } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthResponse as AuthResponse } from '../models/interfaces/auth-response-interface';
-import { AuthModel } from '../models/models/auth-model';
 import { Router } from '@angular/router';
 import { inject, Injectable, signal } from '@angular/core';
 import { SuccessResponse } from '../models/interfaces/SuccessResponse';
+import { DataLoginModel } from '../models/models/data-login-model';
+import { AuthModelRequest } from '../models/interfaces/auth-model-request';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly router = inject(Router);
-  private name = signal<string | null>(null);
+  private dataLogin = signal<DataLoginModel | null>(null);
 
   constructor(private httpClient: HttpClient) {}
 
-  authRequest(loginModel: AuthModel) {
+  authRequest(loginModel: AuthModelRequest) {
     const path = '/api/auth/login';
     this.httpClient.post<AuthResponse>(path, loginModel).subscribe({
       next: (result) => {
         console.log(result);
-        this.name.set(result.name);
+        const data = new DataLoginModel(result.name, result.token);
+        this.dataLogin.set(data);
         this.router.navigate(['']);
       },
       error: (err) => {
@@ -34,6 +36,8 @@ export class AuthService {
     this.httpClient.post<AuthResponse>(path, {}, { withCredentials: true }).subscribe({
       next: (result) => {
         console.log(result);
+        const data = new DataLoginModel(result.name, result.token);
+        this.dataLogin.set(data);
       },
       error: (err) => {
         console.log(err?.error.message);
@@ -50,8 +54,7 @@ export class AuthService {
     this.logoutRequest().subscribe({
       next: (result) => {
         console.log(result.message);
-        this.name.set(null);
-        localStorage.removeItem('name');
+        this.dataLogin.set(null);
         this.router.navigate(['/auth']);
       },
       error: (err) => {
@@ -60,20 +63,7 @@ export class AuthService {
     });
   }
 
-  initAuth() {
-    const savedUser = localStorage.getItem('name');
-    if (savedUser) {
-      this.name.set(savedUser);
-    } else {
-      this.router.navigate(['/auth']);
-    }
-  }
-
-  setLoggedUser(name: string) {
-    this.name.set(name);
-  }
-
   getLoggedUser() {
-    return this.name();
+    return this.dataLogin();
   }
 }

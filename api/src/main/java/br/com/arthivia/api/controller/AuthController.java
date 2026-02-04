@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
+    private final String refreshName = "refreshToken";
     private final AuthService authService;
     private final CookieProperties cookieProperties;
 
@@ -31,7 +32,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid AuthRequestDto authRequestDto) {
         var result = authService.auth(authRequestDto);
 
-        ResponseCookie cookie = generateToken(result.token());
+        ResponseCookie cookie = generateToken(result.refreshToken(), refreshName);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -39,15 +40,15 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<String> refresh(@CookieValue(name = "authToken", required = false) String token) {
-        System.out.println(token);
+    public ResponseEntity<AuthResponseDto> refresh(@CookieValue(name = refreshName, required = false) String token) {
+        var result = authService.refresh(token);
 
-        return ResponseEntity.ok("token");
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse> logout(HttpServletResponse response) {
-        removeToken(response);
+        removeToken(response, refreshName);
 
         return ResponseEntity.ok(new SuccessResponse("Success"));
     }
@@ -58,8 +59,8 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    private static void removeToken(HttpServletResponse response) {
-        Cookie cookie = new Cookie("authToken", "");
+    private static void removeToken(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, "");
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
@@ -67,12 +68,12 @@ public class AuthController {
         response.addCookie(cookie);
     }
 
-    private ResponseCookie generateToken(String token) {
-        return ResponseCookie.from("authToken", token)
+    private ResponseCookie generateToken(String token, String name) {
+        return ResponseCookie.from(name, token)
                 .httpOnly(cookieProperties.isHttpOnly())
                 .sameSite(cookieProperties.getSameSite())
                 .path("/")
-                .maxAge(Duration.ofHours(1))
+                .maxAge(Duration.ofHours(8))
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package br.com.arthivia.api.service;
 
 import br.com.arthivia.api.infra.exceptions.custom.UserAlreadyExists;
+import br.com.arthivia.api.infra.exceptions.custom.UserNotFoundException;
 import br.com.arthivia.api.infra.security.TokenService;
 import br.com.arthivia.api.model.SuccessResponse;
 import br.com.arthivia.api.model.dtos.AuthRequestDto;
@@ -17,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -46,13 +46,28 @@ public class AuthService {
 
         Authentication authenticate = authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken(authenticate);
+        var user = (UserEntity) authenticate.getPrincipal();
+
+        assert user != null;
+        var token = tokenService.generateToken(user, false);
+        var refreshToken = tokenService.generateToken(user, true);
 
         var shouldAlterPass = authRequestDto.password().equals(defaultPass);
 
-        var responseAuth = new AuthResponseDto(authenticate.getName(), shouldAlterPass);
+        var responseAuth = new AuthResponseDto(user.getName(), token, shouldAlterPass);
 
-        return new ResultAuth(token, responseAuth);
+        return new ResultAuth(refreshToken, responseAuth);
+    }
+
+    public AuthResponseDto refresh(String token) {
+        String username = tokenService.validateToken(token);
+
+        UserEntity user = (UserEntity) userRepository.findByUsernameAndEnableTrue(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        String newToken = tokenService.generateToken(user, false);
+
+        return new AuthResponseDto(user.getName(), newToken, false);
     }
 
     public SuccessResponse register(UserInsertDto userInsertDto) {
@@ -60,7 +75,9 @@ public class AuthService {
 
         Optional<UserDetails> userAlreadyExists = userRepository.findByUsernameAndEnableTrue(normalizedLogin);
 
-        if (userAlreadyExists.isPresent()){throw new UserAlreadyExists();}
+        if (userAlreadyExists.isPresent()) {
+            throw new UserAlreadyExists();
+        }
 
         String passHash = new BCryptPasswordEncoder().encode(userInsertDto.password());
         UserEntity userEntity = new UserEntity(userInsertDto, passHash);
