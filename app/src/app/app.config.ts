@@ -1,10 +1,16 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { insertTokenInterceptorInterceptor } from './interceptors/insert-token-interceptor-interceptor';
 import { refreshTokenInterceptor } from './interceptors/refresh-token-interceptor-interceptor';
+import { AuthService } from './services/auth-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,5 +19,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([insertTokenInterceptorInterceptor, refreshTokenInterceptor]),
     ),
+    provideAppInitializer(() => {
+      const auth = inject(AuthService);
+      return auth.initAuth();
+    }),
   ],
 };

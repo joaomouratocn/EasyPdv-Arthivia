@@ -5,7 +5,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { SuccessResponse } from '../models/interfaces/SuccessResponse';
 import { DataLoginModel } from '../models/models/data-login-model';
 import { AuthModelRequest } from '../models/interfaces/auth-model-request';
-import { Observable } from 'rxjs';
+import { catchError, firstValueFrom, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,15 @@ export class AuthService {
   private dataLogin = signal<DataLoginModel | null>(null);
 
   constructor(private httpClient: HttpClient) {}
+
+  initAuth(): Promise<void> {
+    return firstValueFrom(
+      this.refreshResquest().pipe(
+        tap((user) => this.setLoggedUser(user)),
+        catchError(() => of(null)),
+      ),
+    ).then();
+  }
 
   authRequest(loginModel: AuthModelRequest): Observable<AuthResponse> {
     const path = '/api/auth/login';
@@ -30,9 +39,8 @@ export class AuthService {
     const path = '/api/auth/logout';
     this.httpClient.post<SuccessResponse>(path, {}).subscribe({
       next: (result) => {
-        console.log(result.message);
         this.setLoggedUser(null);
-        this.router.navigate(['auth']);
+        this.router.navigate(['/auth']);
       },
       error: (err) => {
         window.alert('Erro ao finalizar sessão');
