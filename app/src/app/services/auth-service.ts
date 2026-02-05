@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private readonly router = inject(Router);
-  private dataLogin = signal<DataLoginModel | false>(false);
+  private dataLogin = signal<DataLoginModel | null>(null);
 
   constructor(private httpClient: HttpClient) {}
 
@@ -31,8 +31,8 @@ export class AuthService {
     this.httpClient.post<SuccessResponse>(path, {}).subscribe({
       next: (result) => {
         console.log(result.message);
-        this.dataLogin.set(false);
-        this.router.navigate(['/auth']);
+        this.setLoggedUser(null);
+        this.router.navigate(['auth']);
       },
       error: (err) => {
         window.alert('Erro ao finalizar sessão');
@@ -40,17 +40,11 @@ export class AuthService {
     });
   }
 
-  verifyLogin() {
-    if (!this.dataLogin()) {
-      this.refreshResquest();
-    }
-  }
-
   getLoggedUser() {
     return this.dataLogin();
   }
 
-  setLoggedUser(dataLogin: DataLoginModel) {
+  setLoggedUser(dataLogin: DataLoginModel | null) {
     this.dataLogin.set(dataLogin);
   }
 }

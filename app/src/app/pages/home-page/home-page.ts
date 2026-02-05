@@ -29,7 +29,7 @@ export class HomePage {
   }
 
   insertCategory() {
-    this.categoryService.insertCategory('Bebidas1').subscribe({
+    this.categoryService.insertCategory('Bebidas21').subscribe({
       next: (result) => {
         console.log(result.message);
       },
