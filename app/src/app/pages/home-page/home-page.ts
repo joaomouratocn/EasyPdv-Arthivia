@@ -11,17 +11,25 @@ import { CategoryService } from '../../services/category-service';
 })
 export class HomePage {
   constructor(
-    private route: Router,
+    private router: Router,
     private authService: AuthService,
     private categoryService: CategoryService,
   ) {}
 
   go() {
-    this.route.navigate(['category']);
+    this.router.navigate(['category']);
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.logoutRequest().subscribe({
+      next: (result) => {
+        window.alert(result.message);
+        this.router.navigate(['auth']);
+      },
+      error: (err) => {
+        window.alert(err?.error.message);
+      },
+    });
   }
 
   refresh() {

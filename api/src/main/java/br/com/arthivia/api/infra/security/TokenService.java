@@ -50,7 +50,7 @@ public class TokenService {
 
     private Instant generateExpDate(boolean isRefresh) {
         if (isRefresh){
-            return LocalDateTime.now().plusHours(8).toInstant(ZoneOffset.ofHours(-3));
+            return LocalDateTime.now().plusSeconds(10).toInstant(ZoneOffset.ofHours(-3));
         }else{
             return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.ofHours(-3));
         }

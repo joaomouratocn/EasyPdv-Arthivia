@@ -3,6 +3,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
+import { DataLoginModel } from '../../models/models/data-login-model';
 
 @Component({
   selector: 'app-login-page',
@@ -29,7 +30,16 @@ export class AuthPage {
       return;
     }
 
-    this.authService.authRequest(this.formFields.getRawValue());
+    this.authService.authRequest(this.formFields.getRawValue()).subscribe({
+      next: (result) => {
+        const data = new DataLoginModel(result.name, result.token);
+        this.authService.setLoggedUser(data);
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        this.showAlert(err?.error.message);
+      },
+    });
   }
 
   isInvalidField(nameField: string): boolean {
