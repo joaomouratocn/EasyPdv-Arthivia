@@ -21,15 +21,7 @@ export class HomePage {
   }
 
   logout() {
-    this.authService.logoutRequest().subscribe({
-      next: (result) => {
-        window.alert(result.message);
-        this.router.navigate(['auth']);
-      },
-      error: (err) => {
-        window.alert(err?.error.message);
-      },
-    });
+    this.authService.logoutRequest();
   }
 
   refresh() {
@@ -37,7 +29,7 @@ export class HomePage {
   }
 
   insertCategory() {
-    this.categoryService.insertCategory('Bebidas').subscribe({
+    this.categoryService.insertCategory('Bebidas1').subscribe({
       next: (result) => {
         console.log(result.message);
       },

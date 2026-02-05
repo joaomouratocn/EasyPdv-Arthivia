@@ -10,11 +10,7 @@ export class CategoryService {
   constructor(private httpClient: HttpClient) {}
 
   insertCategory(categoryName: String): Observable<SuccessResponse> {
-    const path = 'category/insert';
-    return this.httpClient.post<SuccessResponse>(
-      path,
-      { categoryName: categoryName },
-      { withCredentials: true },
-    );
+    const path = 'api/category/insert';
+    return this.httpClient.post<SuccessResponse>(path, { categoryName: categoryName });
   }
 }

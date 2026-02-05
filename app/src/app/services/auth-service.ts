@@ -21,23 +21,29 @@ export class AuthService {
     return this.httpClient.post<AuthResponse>(path, loginModel);
   }
 
-  refreshResquest() {
+  refreshResquest(): Observable<DataLoginModel> {
     const path = '/api/auth/refresh';
-    this.httpClient.post<AuthResponse>(path, {}, { withCredentials: true }).subscribe({
+    return this.httpClient.post<AuthResponse>(path, {}, { withCredentials: true });
+  }
+
+  logoutRequest() {
+    const path = '/api/auth/logout';
+    this.httpClient.post<SuccessResponse>(path, {}).subscribe({
       next: (result) => {
-        console.log(result);
-        const data = new DataLoginModel(result.name, result.token);
-        this.dataLogin.set(data);
+        console.log(result.message);
+        this.dataLogin.set(false);
+        this.router.navigate(['/auth']);
       },
       error: (err) => {
-        this.router.navigate(['auth']);
+        window.alert('Erro ao finalizar sessão');
       },
     });
   }
 
-  logoutRequest(): Observable<SuccessResponse> {
-    const path = '/api/auth/logout';
-    return this.httpClient.post<SuccessResponse>(path, {}, { withCredentials: true });
+  verifyLogin() {
+    if (!this.dataLogin()) {
+      this.refreshResquest();
+    }
   }
 
   getLoggedUser() {

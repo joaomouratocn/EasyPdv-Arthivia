@@ -1,5 +1,6 @@
 package br.com.arthivia.api.infra.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,16 +32,29 @@ public class SecurityConfig {
     CorsProperties corsProperties;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserDetailsService userDetailsService) {
-        return httpSecurity
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            UserDetailsService userDetailsService
+    ) throws Exception {
+
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorized -> authorized
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, exAuth) ->
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                        )
+                )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource(corsProperties)))
                 .build();
     }

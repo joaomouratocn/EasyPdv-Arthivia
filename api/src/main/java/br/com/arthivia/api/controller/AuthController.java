@@ -19,7 +19,6 @@ import java.time.Duration;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final String refreshName = "refreshToken";
     private final AuthService authService;
     private final CookieProperties cookieProperties;
 
@@ -32,7 +31,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid AuthRequestDto authRequestDto) {
         var result = authService.auth(authRequestDto);
 
-        ResponseCookie cookie = generateToken(result.refreshToken(), refreshName);
+        ResponseCookie cookie = generateCookie(result.refreshToken());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -40,7 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDto> refresh(@CookieValue(name = refreshName, required = false) String token) {
+    public ResponseEntity<AuthResponseDto> refresh(@CookieValue(name = "refreshToken", required = false) String token) {
         var result = authService.refresh(token);
 
         return ResponseEntity.ok(result);
@@ -48,7 +47,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse> logout(HttpServletResponse response) {
-        removeToken(response, refreshName);
+        removeToken(response);
 
         return ResponseEntity.ok(new SuccessResponse("Success"));
     }
@@ -59,8 +58,8 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    private static void removeToken(HttpServletResponse response, String name) {
-        Cookie cookie = new Cookie(name, "");
+    private static void removeToken(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refreshToken", "");
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
@@ -68,11 +67,11 @@ public class AuthController {
         response.addCookie(cookie);
     }
 
-    private ResponseCookie generateToken(String token, String name) {
-        return ResponseCookie.from(name, token)
+    private ResponseCookie generateCookie(String token) {
+        return ResponseCookie.from("refreshToken", token)
                 .httpOnly(cookieProperties.isHttpOnly())
                 .sameSite(cookieProperties.getSameSite())
-                .path("/")
+                .path("/api/auth/refresh")
                 .maxAge(Duration.ofHours(8))
                 .build();
     }
