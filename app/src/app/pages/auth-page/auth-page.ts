@@ -17,6 +17,7 @@ export class AuthPage {
     username: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
     password: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
   });
+  showPass: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -48,6 +49,10 @@ export class AuthPage {
     } else {
       return false;
     }
+  }
+
+  alterVisiblityPassword() {
+    this.showPass = !this.showPass;
   }
 
   showAlert(message: string) {

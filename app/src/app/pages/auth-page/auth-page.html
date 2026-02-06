@@ -16,7 +16,7 @@
         name="username"
         formControlName="username"
         placeholder="Insira nome de usuário"
-        class="p-1.5 border border-gray-400 rounded-xl w-60"
+        class="p-1.5 border border-gray-400 rounded-xl w-60 focus:outline-none"
       />
       @if (isInvalidField('username')) {
         <p class="text-red-500 px-3.5">Este campo é obrigatório</p>
@@ -24,14 +24,35 @@
     </div>
     <div>
       <label id="password" class="block text-gray-400 px-2.5">Senha:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        formControlName="password"
-        placeholder="Insira senha"
-        class="p-1.5 border border-gray-400 rounded-xl w-60"
-      />
+      <div class="flex gap-1 border border-gray-400 rounded-xl p-1.5">
+        <input
+          [type]="showPass ? 'text' : 'password'"
+          id="password"
+          name="password"
+          formControlName="password"
+          placeholder="Insira senha"
+          class="focus:outline-none"
+        />
+        @if (showPass) {
+          <img
+            (click)="alterVisiblityPassword()"
+            [ngSrc]="showPass ? '/visibility_16dp.svg' : '/visibility_off_16dp.svg'"
+            alt="visible password"
+            width="24"
+            height="24"
+            priority
+          />
+        } @else {
+          <img
+            (click)="alterVisiblityPassword()"
+            ngSrc="/visibility_off_16dp.svg"
+            alt="visible password"
+            width="24"
+            height="24"
+            priority
+          />
+        }
+      </div>
       @if (isInvalidField('password')) {
         <p class="text-red-500 px-3.5">Este campo é obrigatório</p>
       }

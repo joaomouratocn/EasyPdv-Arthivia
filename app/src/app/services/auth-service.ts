@@ -19,7 +19,7 @@ export class AuthService {
   initAuth(): Promise<void> {
     return firstValueFrom(
       this.refreshResquest().pipe(
-        tap((user) => this.setLoggedUser(user)),
+        tap((result) => this.setLoggedUser(result)),
         catchError(() => of(null)),
       ),
     ).then();
