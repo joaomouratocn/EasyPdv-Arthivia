@@ -1,5 +1,5 @@
-<div class="flex flex-col gap-5 mx-auto w-7xl h-screen p-5 rounded-2xl shadow-2xl">
-  <div class="flex flex-col gap-2.5 p-5 rounded-2xl">
+<div class="flex flex-col gap-3 mx-auto w-7xl h-screen p-5 rounded-2xl shadow-2xl">
+  <div class="flex flex-col gap-2.5 p-5 rounded-2xl border border-gray-400 shadow">
     <h1 class="font-bold text-2xl">Categorias</h1>
     <div class="flex gap-2">
       <input
@@ -17,22 +17,25 @@
       </button>
     </div>
   </div>
-  <hr class="text-gray-300" />
-  <ul class="flex flex-col gap-2 flex-1 rounded-2xl p-5">
-    <li class="flex justify-between items-center shadow-2xl rounded p-3">
-      <span class="font-semibold text-lg">Alimentos</span>
-      <div class="flex gap-0.5">
-        <button class="bg-green-500 text-white font-bold border rounded px-2 py-0.5 cursor-pointer">
-          Editar
-        </button>
-        <button
-          class="bg-red-500 border text-white font-semibold rounded px-2 py-0.5 cursor-pointer"
-        >
-          Deletar
-        </button>
-      </div>
-    </li>
-  </ul>
+  <div class="rounded-2xl p-5 shadow-xl flex-1 shadow border border-gray-400">
+    <table class="w-full border">
+      <tr class="bg-blue-400 text-white">
+        <th class="text-left">Nome</th>
+        <th>Ação</th>
+      </tr>
+      @for (item of categoryList; track $index) {
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>
+            <button>Alterar</button>
+            <button>Deletar</button>
+          </td>
+        </tr>
+      } @empty {
+        <p>Nenhuma Categoria Encontrada</p>
+      }
+    </table>
+  </div>
   <button class="bg-blue-500 text-white font-semibold px-5 py-1 rounded ml-auto hover:bg-blue-700">
     Nova Categoria
   </button>

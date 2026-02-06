@@ -16,13 +16,13 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) {}
 
-  initAuth(): Promise<void> {
-    return firstValueFrom(
-      this.refreshResquest().pipe(
-        tap((result) => this.setLoggedUser(result)),
-        catchError(() => of(null)),
-      ),
-    ).then();
+  async initAuth(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.refreshResquest());
+      this.setLoggedUser(result);
+    } catch (err) {
+      return;
+    }
   }
 
   authRequest(loginModel: AuthModelRequest): Observable<AuthResponse> {
