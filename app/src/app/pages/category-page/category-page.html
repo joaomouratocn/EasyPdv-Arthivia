@@ -17,18 +17,32 @@
       </button>
     </div>
   </div>
-  <div class="rounded-2xl p-5 shadow-xl flex-1 shadow border border-gray-400">
-    <table class="w-full border">
+  <div class="rounded flex-1 shadow border border-gray-400">
+    <table class="w-full" tabindex="0">
       <tr class="bg-blue-400 text-white">
-        <th class="text-left">Nome</th>
+        <th class="text-left w-[80%]">Nome</th>
         <th>Ação</th>
       </tr>
       @for (item of categoryList; track $index) {
-        <tr>
+        <tr class="odd:bg-blue-100 even:bg-white hover:bg-gray-100" tabindex="0">
           <td>{{ item.name }}</td>
-          <td>
-            <button>Alterar</button>
-            <button>Deletar</button>
+          <td class="flex items-center justify-center gap-2">
+            <img
+              ngSrc="/edit_16dp.svg"
+              alt="Alterar Categoria"
+              width="24"
+              height="24"
+              priority
+              class="cursor-pointer"
+            />
+            <img
+              ngSrc="/delete_16dp.svg"
+              alt="visible password"
+              width="24"
+              height="24"
+              priority
+              class="cursor-pointer"
+            />
           </td>
         </tr>
       } @empty {

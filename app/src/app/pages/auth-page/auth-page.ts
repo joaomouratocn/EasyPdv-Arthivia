@@ -38,7 +38,7 @@ export class AuthPage {
         this.router.navigate(['']);
       },
       error: (err) => {
-        this.showAlert(err?.error.message);
+        window.alert('Erro ao se conectar com servidor!');
       },
     });
   }

@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoryResponseInterface } from '../../models/interfaces/categoty-response-interface';
 import { CategoryService } from '../../services/category-service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-category-page',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, NgOptimizedImage],
   templateUrl: './category-page.html',
   styleUrl: './category-page.css',
 })
