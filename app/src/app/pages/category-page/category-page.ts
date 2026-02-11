@@ -2,15 +2,18 @@ import { ChangeDetectorRef, Component, ElementRef, QueryList, ViewChildren } fro
 import { FormsModule } from '@angular/forms';
 import { CategoryResponseInterface } from '../../models/interfaces/categoty-response-interface';
 import { CategoryService } from '../../services/category-service';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NewAndUpdateCategoryModal } from './new-and-update-category-modal/new-and-update-category-modal';
+import { CategoryInsertModel } from '../../models/models/category-insert-model';
 
 @Component({
   selector: 'app-category-page',
-  imports: [FormsModule, CommonModule, NgOptimizedImage],
+  imports: [FormsModule, CommonModule, NewAndUpdateCategoryModal],
   templateUrl: './category-page.html',
   styleUrl: './category-page.css',
 })
 export class CategoryPage {
+  openModal = false;
   @ViewChildren('row') rows!: QueryList<ElementRef<HTMLTableRowElement>>;
   categorySearch: string = '';
   categoryList: CategoryResponseInterface[] = [];
@@ -22,6 +25,10 @@ export class CategoryPage {
   ) {}
 
   ngOnInit() {
+    this.loadTable();
+  }
+
+  loadTable() {
     this.categoryService.getAllCategories().subscribe({
       next: (result) => {
         this.categoryList = result;
@@ -31,19 +38,6 @@ export class CategoryPage {
         console.log(err?.error.message);
       },
     });
-  }
-
-  onTableFocus() {
-    this.focusRow(this.selectedIndex);
-  }
-
-  focusRow(index: number) {
-    this.rows.get(index)?.nativeElement.focus();
-  }
-
-  selectRow(index: number) {
-    this.selectedIndex = index;
-    this.focusRow(index);
   }
 
   onKeyDown(event: KeyboardEvent, index: number) {
@@ -60,7 +54,8 @@ export class CategoryPage {
 
       case 'Enter':
         event.preventDefault();
-        this.edit(this.categoryList[index]);
+        console.log(this.selectedCategory);
+        this.open(true);
         break;
     }
   }
@@ -79,16 +74,47 @@ export class CategoryPage {
     }
   }
 
-  onEnter(index: number) {
-    const item = this.categoryList[index];
-    this.edit(item);
+  onTableFocus() {
+    this.focusRow(this.selectedIndex);
   }
 
-  edit(category: CategoryResponseInterface) {
-    console.log('EDIT');
+  focusRow(index: number) {
+    this.rows.get(index)?.nativeElement.focus();
   }
 
-  remove(category: CategoryResponseInterface) {
-    console.log('REMOVE');
+  selectRow(index: number) {
+    this.selectedIndex = index;
+    this.focusRow(index);
+  }
+
+  open(exist: boolean) {
+    if (exist) {
+      this.selectedCategory = this.categoryList[this.selectedIndex];
+    } else {
+      this.selectedCategory = null;
+    }
+    this.openModal = true;
+  }
+
+  close() {
+    this.openModal = false;
+  }
+
+  saveCategory(category: CategoryInsertModel) {
+    this.close();
+    console.log(category);
+    if (category.id) {
+      //implement update category
+    } else {
+      this.categoryService.insertCategory(category.name).subscribe({
+        next: (result) => {
+          console.log(result);
+          this.loadTable();
+        },
+        error: (err) => {
+          window.alert(err?.error.message);
+        },
+      });
+    }
   }
 }

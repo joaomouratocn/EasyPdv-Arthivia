@@ -12,6 +12,7 @@ export class CategoryService {
 
   insertCategory(categoryName: String): Observable<SuccessResponse> {
     const path = 'api/category/insert';
+    console.log(categoryName);
     return this.httpClient.post<SuccessResponse>(path, { categoryName: categoryName });
   }
 
