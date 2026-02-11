@@ -17,40 +17,40 @@
       </button>
     </div>
   </div>
-  <div class="rounded flex-1 shadow border border-gray-400">
-    <table class="w-full" tabindex="0">
+  <div class="rounded flex-1 shadow border border-gray-400" (focus)="onTableFocus()" tabindex="0">
+    <table class="w-full">
       <tr class="bg-blue-400 text-white">
-        <th class="text-left w-[80%]">Nome</th>
-        <th>Ação</th>
+        <th class="text-left w-[80%] px-2">NOME</th>
       </tr>
+
       @for (item of categoryList; track $index) {
-        <tr class="odd:bg-blue-100 even:bg-white hover:bg-gray-100" tabindex="0">
-          <td>{{ item.name }}</td>
-          <td class="flex items-center justify-center gap-2">
-            <img
-              ngSrc="/edit_16dp.svg"
-              alt="Alterar Categoria"
-              width="24"
-              height="24"
-              priority
-              class="cursor-pointer"
-            />
-            <img
-              ngSrc="/delete_16dp.svg"
-              alt="visible password"
-              width="24"
-              height="24"
-              priority
-              class="cursor-pointer"
-            />
-          </td>
+        <tr
+          #row
+          tabindex="-1"
+          class="flex items-center odd:bg-blue-100 even:bg-white hover:bg-amber-100 focus:bg-amber-100 cursor-pointer py-1"
+          (click)="selectRow($index)"
+          (keydown)="onKeyDown($event, $index)"
+        >
+          <td class="px-2 flex-1">{{ item.name }}</td>
         </tr>
-      } @empty {
-        <p>Nenhuma Categoria Encontrada</p>
       }
     </table>
   </div>
-  <button class="bg-blue-500 text-white font-semibold px-5 py-1 rounded ml-auto hover:bg-blue-700">
-    Nova Categoria
-  </button>
+  <div class="ml-auto flex gap-2">
+    <button
+      class="bg-blue-500 text-white font-semibold px-5 py-1 rounded hover:bg-blue-700 focus:bg-blue-700"
+    >
+      Nova Categoria
+    </button>
+    <button
+      class="bg-green-500 text-white font-semibold px-5 py-1 rounded hover:bg-green-700 focus:bg-green-700"
+    >
+      Editar Categoria
+    </button>
+    <button
+      class="bg-red-500 text-white font-semibold px-5 py-1 rounded hover:bg-red-700 focus:bg-red-700"
+    >
+      Deletar Categoria
+    </button>
+  </div>
 </div>
