@@ -40,13 +40,13 @@
   </div>
   <div class="ml-auto flex gap-2">
     <button
-      (click)="open(false)"
+      (click)="open(-1)"
       class="bg-blue-500 text-white font-semibold px-5 py-1 rounded hover:bg-blue-700 focus:bg-blue-700"
     >
       Nova Categoria
     </button>
     <button
-      (click)="open(true)"
+      (click)="open(selectedIndex)"
       class="bg-green-500 text-white font-semibold px-5 py-1 rounded hover:bg-green-700 focus:bg-green-700"
     >
       Editar Categoria
@@ -62,7 +62,6 @@
     [title]="selectedCategory ? 'Editar Categoria' : 'Nova Categoria'"
     [receivedCategory]="selectedCategory"
     [isOpen]="openModal"
-    (close)="close()"
-    (saveCategory)="saveCategory($event)"
+    (close)="close($event)"
   />
 </div>

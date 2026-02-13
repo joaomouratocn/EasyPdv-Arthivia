@@ -4,7 +4,7 @@ import { CategoryResponseInterface } from '../../models/interfaces/categoty-resp
 import { CategoryService } from '../../services/category-service';
 import { CommonModule } from '@angular/common';
 import { NewAndUpdateCategoryModal } from './new-and-update-category-modal/new-and-update-category-modal';
-import { CategoryInsertModel } from '../../models/models/category-insert-model';
+import { CategoryEditModel } from '../../models/models/category-edit-model';
 
 @Component({
   selector: 'app-category-page',
@@ -17,7 +17,8 @@ export class CategoryPage {
   @ViewChildren('row') rows!: QueryList<ElementRef<HTMLTableRowElement>>;
   categorySearch: string = '';
   categoryList: CategoryResponseInterface[] = [];
-  selectedIndex = 0;
+  selectedCategory: CategoryResponseInterface | null = null;
+  selectedIndex = -1;
 
   constructor(
     private categoryService: CategoryService,
@@ -54,8 +55,7 @@ export class CategoryPage {
 
       case 'Enter':
         event.preventDefault();
-        console.log(this.selectedCategory);
-        this.open(true);
+        this.open(this.selectedIndex);
         break;
     }
   }
@@ -75,10 +75,14 @@ export class CategoryPage {
   }
 
   onTableFocus() {
+    if (this.selectedIndex === -1) {
+      this.selectedIndex = 0;
+    }
     this.focusRow(this.selectedIndex);
   }
 
   focusRow(index: number) {
+    this.selectedCategory = this.categoryList[index];
     this.rows.get(index)?.nativeElement.focus();
   }
 
@@ -87,34 +91,19 @@ export class CategoryPage {
     this.focusRow(index);
   }
 
-  open(exist: boolean) {
-    if (exist) {
-      this.selectedCategory = this.categoryList[this.selectedIndex];
-    } else {
-      this.selectedCategory = null;
+  open(index: number) {
+    if (this.selectedIndex === -1) {
+      window.alert('Selecione um categoria');
+      return;
     }
+
     this.openModal = true;
   }
 
-  close() {
-    this.openModal = false;
-  }
-
-  saveCategory(category: CategoryInsertModel) {
-    this.close();
-    console.log(category);
-    if (category.id) {
-      //implement update category
-    } else {
-      this.categoryService.insertCategory(category.name).subscribe({
-        next: (result) => {
-          console.log(result);
-          this.loadTable();
-        },
-        error: (err) => {
-          window.alert(err?.error.message);
-        },
-      });
+  close(result: boolean) {
+    if (result) {
+      this.loadTable();
     }
+    this.openModal = false;
   }
 }
