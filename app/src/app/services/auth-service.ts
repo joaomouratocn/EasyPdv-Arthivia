@@ -42,9 +42,6 @@ export class AuthService {
         this.setLoggedUser(null);
         this.router.navigate(['/auth']);
       },
-      error: (err) => {
-        window.alert('Erro ao finalizar sessão');
-      },
     });
   }
 

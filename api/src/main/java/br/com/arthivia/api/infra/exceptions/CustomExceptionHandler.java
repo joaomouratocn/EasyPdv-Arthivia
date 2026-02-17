@@ -27,7 +27,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> AuthenticationException(Exception e) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, "Nome de usuário ou senha invalído");
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Nome de usuário ou senha invalído");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

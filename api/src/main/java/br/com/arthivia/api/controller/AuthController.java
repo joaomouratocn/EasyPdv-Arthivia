@@ -72,7 +72,7 @@ public class AuthController {
                 .httpOnly(cookieProperties.isHttpOnly())
                 .sameSite(cookieProperties.getSameSite())
                 .path("/api/auth/refresh")
-                .maxAge(Duration.ofHours(9))
+                .maxAge(Duration.ofMinutes(1))
                 .build();
     }
 }

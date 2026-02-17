@@ -37,9 +37,6 @@ export class AuthPage {
         this.authService.setLoggedUser(data);
         this.router.navigate(['']);
       },
-      error: (err) => {
-        window.alert('Erro ao se conectar com servidor!');
-      },
     });
   }
 
